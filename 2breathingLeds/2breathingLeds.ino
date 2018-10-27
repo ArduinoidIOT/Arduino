@@ -1,8 +1,7 @@
 /***********************************************************
 File name: 2breathingleds.ino
-Description: PWM control one LED gradually from dark to 
-             bright, then from bright to dark and PWM control one LED gradually from bright to 
-             dark, then from dark to bright simulataneuoly
+Description: 
+	PWM controls 2 leds simultaenously, with 1 led getting brighter and the other led getting dimmer at the same time.
 ***********************************************************/
 #define STEPSIZE 1
 int ledpin=11;//definition digital 11 pins as pin to control the LED

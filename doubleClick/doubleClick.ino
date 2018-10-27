@@ -1,37 +1,38 @@
 /***********************************************************
-  File name:doubleClick.ino
-  Description: Using interrupt mode, every time you double-click one led toggles
+Author:Rohan Rao (rohroexperiment@gmail.com) 
+ File name:doubleClick.ino
+  Description: Using interrupts, every time you double-click one led toggles
 and when you single-click the other led toggles
 ***********************************************************/
 
 int ledpin = 11;//definition digital 11 pins as pin to control the LED
 int ledpin2 = 12; //definition digital 12 pins as pin to control the LED
 int btnpin = 2;           //Set the digital pin 2 to button interface
-volatile int state = LOW; //Defined output status LED Interface
+volatile int state = LOW; //LED 1 status
 volatile int state2 = LOW;//Defined output status LED Interface
 void setup()
 {
   pinMode(ledpin, OUTPUT);//Set digital 11 port mode, the OUTPUT for the output
   pinMode(ledpin2, OUTPUT);//Set digital 12 port mode, the OUTPUT for the output
-  attachInterrupt(0, stateChange, FALLING);//Monitoring Interrupt 0 (Digital PIN 2) changes in the input pins FALLING
+  attachInterrupt(0, stateChange, FALLING);//Monitoring Interrupt 0 (Digital PIN 2) cwhen it falls from HIGH to LOW
 }
 
 void loop()
 {
-  digitalWrite(ledpin, state2);//Output control status LED, ON or OFF
-  digitalWrite(ledpin2, state);//Output control status LED, ON or OFF
+  digitalWrite(ledpin, state);//Set LED 1 to state 1
+  digitalWrite(ledpin2, state2);//Set LED 2 to state 2
 }
 
-void stateChange()                          //Interrupt function
+void stateChange()                          //ISR
 {
-  noInterrupts(); 
+  cli(); // clear interrupts flag
   detachInterrupt(0);//Disable this interrupt
   int clicks = 0;
   
-  if (detectClick() > 0) {
+  if (detectClick() > 0) {//detect click
      clicks++;
   }  else {//re-enables this interrupt and exits
-    interrupts();
+    sei();
     attachInterrupt(0, stateChange, FALLING);
     return;
   }
@@ -47,19 +48,19 @@ void stateChange()                          //Interrupt function
   }
 
   if (clicks == 1) {
-    state = !state;//toggles led 1
+    state = !state;//toggle led 1
   }else if (clicks == 2) {
-    state2 = !state2;//toggles led 2
+    state2 = !state2;//toggle led 2
   }
   blockForHigh();
 	//reenables interrupts
-  interrupts();
+  sei();
   attachInterrupt(0, stateChange, FALLING);
 }
 
 //detect and confirm click
 int detectClick() {
-   if (digitalRead(btnpin) == LOW)           //Detection button interface to low
+   if (digitalRead(btnpin) == LOW)           //Check if button pin is low
     {
       delayMicroseconds(10000);             //Delay 10ms for the elimination of key leading-edge jitter
       if (digitalRead(btnpin) == LOW)       //Confirm button is pressed
