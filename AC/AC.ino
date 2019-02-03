@@ -1,5 +1,5 @@
 
-#define DELAY 1666
+#define DELAY  588
 void setup() {
   // put your setup code here, to run once:
   pinMode(8,OUTPUT);  
