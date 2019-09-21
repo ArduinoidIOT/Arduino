@@ -6,12 +6,13 @@ and when you single-click the other led toggles
 ***********************************************************/
 
 int ledpin = 11;//definition digital 11 pins as pin to control the LED
-int ledpin2 = 12; //definition digital 12 pins as pin to control the LED
+int ledpin2 = 13; //definition digital 13 pins as pin to control the LED
 int btnpin = 2;           //Set the digital pin 2 to button interface
 volatile int state = LOW; //LED 1 status
 volatile int state2 = LOW;//Defined output status LED Interface
 void setup()
 {
+  pinMode(btnpin,INPUT_PULLUP);
   pinMode(ledpin, OUTPUT);//Set digital 11 port mode, the OUTPUT for the output
   pinMode(ledpin2, OUTPUT);//Set digital 12 port mode, the OUTPUT for the output
   attachInterrupt(0, stateChange, FALLING);//Monitoring Interrupt 0 (Digital PIN 2) cwhen it falls from HIGH to LOW
